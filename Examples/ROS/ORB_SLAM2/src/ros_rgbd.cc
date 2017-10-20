@@ -54,15 +54,15 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "RGBD");
     ros::start();
 
-    if(argc != 3)
+	if(argc != 4)
     {
-        cerr << endl << "Usage: rosrun ORB_SLAM2 RGBD path_to_vocabulary path_to_settings" << endl;        
+		cerr << endl << "Usage: rosrun ORB_SLAM2 RGBD path_to_vocabulary path_to_settings path_to_calibration" << endl;
         ros::shutdown();
         return 1;
     }    
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::RGBD,true);
+	ORB_SLAM2::System SLAM(argv[1],argv[2],argv[3],ORB_SLAM2::System::RGBD,true);
 
     ImageGrabber igb(&SLAM);
 
@@ -117,7 +117,7 @@ void ImageGrabber::GrabRGBD(const sensor_msgs::ImageConstPtr& msgRGB,const senso
 
     if (pose.empty())
         return;
-
+	// TODO: validate coordinates system conversion
     /* global left handed coordinate system */
     static cv::Mat pose_prev = cv::Mat::eye(4,4, CV_32F);
     static cv::Mat world_lh = cv::Mat::eye(4,4, CV_32F);

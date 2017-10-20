@@ -26,19 +26,23 @@
 namespace ORB_SLAM2
 {
 
-Viewer::Viewer(System* pSystem, FrameDrawer *pFrameDrawer, MapDrawer *pMapDrawer, Tracking *pTracking, const string &strSettingPath):
+Viewer::Viewer(System* pSystem, FrameDrawer *pFrameDrawer, MapDrawer *pMapDrawer, Tracking *pTracking, const string &strSettingPath, const string &strCalibrationPath):
     mpSystem(pSystem), mpFrameDrawer(pFrameDrawer),mpMapDrawer(pMapDrawer), mpTracker(pTracking),
     mbFinishRequested(false), mbFinished(true), mbStopped(true), mbStopRequested(false)
 {
     cv::FileStorage fSettings(strSettingPath, cv::FileStorage::READ);
+	cv::FileStorage fCalibration(strCalibrationPath, cv::FileStorage::READ);
 
     float fps = fSettings["Camera.fps"];
     if(fps<1)
         fps=30;
     mT = 1e3/fps;
 
-    mImageWidth = fSettings["Camera.width"];
-    mImageHeight = fSettings["Camera.height"];
+	cv::FileNode resolution_node = fCalibration["resolution"];
+	cv::FileNodeIterator it = resolution_node.begin();
+	(*it++)["width"] >> mImageWidth;
+	(*it)["height"] >> mImageHeight;
+
     if(mImageWidth<1 || mImageHeight<1)
     {
         mImageWidth = 640;

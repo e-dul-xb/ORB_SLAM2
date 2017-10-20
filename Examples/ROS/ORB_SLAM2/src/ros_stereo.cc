@@ -53,19 +53,19 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "RGBD");
     ros::start();
 
-    if(argc != 4)
+	if(argc != 5)
     {
-        cerr << endl << "Usage: rosrun ORB_SLAM2 Stereo path_to_vocabulary path_to_settings do_rectify" << endl;
+		cerr << endl << "Usage: rosrun ORB_SLAM2 Stereo path_to_vocabulary path_to_settings path_to_calibration do_rectify" << endl;
         ros::shutdown();
         return 1;
     }    
 
     // Create SLAM system. It initializes all system threads and gets ready to process frames.
-    ORB_SLAM2::System SLAM(argv[1],argv[2],ORB_SLAM2::System::STEREO,true);
+	ORB_SLAM2::System SLAM(argv[1],argv[2],argv[3],ORB_SLAM2::System::STEREO,true);
 
     ImageGrabber igb(&SLAM);
 
-    stringstream ss(argv[3]);
+	stringstream ss(argv[4]);
 	ss >> boolalpha >> igb.do_rectify;
 
     if(igb.do_rectify)
