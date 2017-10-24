@@ -70,17 +70,22 @@ Tracking::Tracking(System *pSys, ORBVocabulary* pVoc, FrameDrawer *pFrameDrawer,
     K.at<float>(1,2) = cy;
     K.copyTo(mK);
 
-    cv::Mat DistCoef(4,1,CV_32F);
-	DistCoef.at<float>(0) = distortion_coefficients.at<double>(0,0);
-	DistCoef.at<float>(1) = distortion_coefficients.at<double>(0,1);
-	DistCoef.at<float>(2) = distortion_coefficients.at<double>(0,2);
-	DistCoef.at<float>(3) = distortion_coefficients.at<double>(0,3);
-	const float k3 = distortion_coefficients.at<double>(0,4);
-    if(k3!=0)
-    {
-        DistCoef.resize(5);
-        DistCoef.at<float>(4) = k3;
-    }
+    cv::Mat DistCoef(8,1,CV_32F);
+    DistCoef.at<float>(0) = distortion_coefficients.at<double>(0,0);
+    DistCoef.at<float>(1) = distortion_coefficients.at<double>(0,1);
+    DistCoef.at<float>(2) = distortion_coefficients.at<double>(0,2);
+    DistCoef.at<float>(3) = distortion_coefficients.at<double>(0,3);
+    DistCoef.at<float>(4) = distortion_coefficients.at<double>(0,4);
+    DistCoef.at<float>(5) = distortion_coefficients.at<double>(0,5);
+    DistCoef.at<float>(6) = distortion_coefficients.at<double>(0,6);
+    DistCoef.at<float>(7) = distortion_coefficients.at<double>(0,7);
+//      const float k3 = distortion_coefficients.at<double>(0,4);
+//    if(k3!=0)
+//    {
+//        DistCoef.resize(5);
+//        DistCoef.at<float>(4) = k3;
+//    }
+
     DistCoef.copyTo(mDistCoef);
 
     mbf = fSettings["Camera.bf"];
